@@ -1,0 +1,52 @@
+# This is a basic workflow to help you get started with Actions
+
+name: mac_neovim
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest]
+        name: [neovim-v04-x64, neovim-nightly-x64]
+        include:
+          - name: neovim-v04-x64
+            os: macos-latest
+            neovim_version: v0.4.3
+          - name: neovim-nightly-x64
+            os: macos-latest
+            neovim_version: nightly
+    # The type of runner that the job will run on
+    runs-on: ${{matrix.os}}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v1
+    - name: Download neovim
+      shell: bash
+      run: curl -L https://github.com/neovim/neovim/releases/download/${{matrix.neovim_version}}/nvim-macos.tar.gz -o ~/nvim.tar.gz
+    - name: Extract neovim
+      shell: bash
+      run: tar xzf ~/nvim.tar.gz -C ~/
+    - name: Download test runner
+      shell: bash
+      run: git clone --depth 1 --branch v1.5.4 --single-branch https://github.com/thinca/vim-themis ~/themis
+    - name: Run tests
+      shell: bash
+      run: |
+        export PATH=~/nvim-osx64/bin:$PATH
+        export PATH=~/themis/bin:$PATH
+        export THEMIS_VIM=nvim
+        nvim --version
+        themis --reporter spec
+        

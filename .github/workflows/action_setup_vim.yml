@@ -39,6 +39,5 @@ jobs:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
           PROFILE_LOG: profile.txt
         run: |
-          cd ./test
           echo $THEMIS_VIM
-          ../vim-themis/bin/themis .
+          ./vim-themis/bin/themis .

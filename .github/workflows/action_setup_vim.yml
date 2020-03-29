@@ -33,11 +33,12 @@ jobs:
         id: vim
         with:
           neovim: ${{ matrix.neovim }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run unit tests
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
           PROFILE_LOG: profile.txt
         run: |
+          cd ./test
           echo $THEMIS_VIM
           ../vim-themis/bin/themis ./test

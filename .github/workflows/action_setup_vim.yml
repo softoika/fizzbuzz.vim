@@ -41,4 +41,4 @@ jobs:
         run: |
           cd ./test
           echo $THEMIS_VIM
-          ../vim-themis/bin/themis ./test
+          ../vim-themis/bin/themis .
